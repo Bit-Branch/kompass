@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 var mysql = require('mysql');
 
 //const searchUrl = 'https://by.kompass.com/c/%D1%83%D0%BD%D0%B8%D0%B2%D0%B5%D1%80%D1%81%D0%B0%D0%BB-%D0%B0%D0%B2%D1%82%D0%BE-%D0%BE%D0%B4%D0%BE/by062627/';
-const URL = 'https://by.kompass.com/r/%D0%BC%D0%B8%D0%BD%D1%81%D0%BA%D0%B0%D1%8F-%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C/by_bymi/'
+const URL = 'https://by.kompass.com/'
 const companies = []
 var values = []
 
@@ -72,27 +72,38 @@ function getCompany(searchUrl) {
 
         companies.push(new Company(title,address,fax,status,year,form,activity,officeEmployees,companyEmployees,kompassID).outputInfo());
         values.push([title,address,fax,status,year,form,activity,officeEmployees,companyEmployees,kompassID]);
-        
       });
   }
 
-  function getCompanies(){
-    return fetch(`${URL}`)
+  function getCompanies(regionURL){
+    return fetch(`${regionURL}`)
       .then(response => response.text())
       .then(body => {
         const $ = cheerio.load(body);
-        $('.prod_list').each(function(i, element) {
+        $('#resultatDivId > div').each(function(i, element) {
           getCompany(encodeURI($(this).find('a').attr('href')));
       });
       }); 
   }
 
-  function allC(){
-    getCompanies();
-    console.log(values)
+  function getRegions(){
+    return fetch(`${URL}`)
+      .then(response => response.text())
+      .then(body => {
+        const $ = cheerio.load(body);
+        $('#regions > div > div > ul > li').each(function(i, element) {
+          getCompanies(URL + encodeURI($(this).find('a').attr('href')));
+      });
+      }); 
   }
 
-allC()
+  function showInfo(){
+    console.log(values)
+    console.log(companies)
+  }
+
+getRegions()
+
 
 
 
