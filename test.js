@@ -102,16 +102,4 @@ function getCompany(searchUrl) {
       }); 
   }
 
-  function showInfo(){
-    console.log(values)
-    console.log(companies)
-  }
-
-getRegions()
-
-
-
-
-
-
-
+  getRegions()
