@@ -18,7 +18,8 @@ class Company {
     activity,
     officeEmployees,
     companyEmployees,
-    kompassID) {
+    kompassID,
+    site) {
     this.title = title;
     this.address = address;
     this.fax = fax;
@@ -29,6 +30,7 @@ class Company {
     this.officeEmployees = officeEmployees;
     this.companyEmployees = companyEmployees;
     this.kompassID = kompassID;
+    this.site = site;
   }
 
   outputInfo() {
@@ -41,7 +43,8 @@ class Company {
     'activity: ' + this.activity + '\n' +
     'officeEmployees: ' + this.officeEmployees + '\n' +
     'companyEmployees: ' + this.companyEmployees + '\n' +
-    'kompassID: ' + this.kompassID + '\n'
+    'kompassID: ' + this.kompassID + '\n' +
+    'site: ' + this.site + '\n'
     );
   }
 };
@@ -51,7 +54,7 @@ function getCompany(searchUrl) {
       .then(response => response.text())
       .then(body => {
         const $ = cheerio.load(body);
-        const title = $('.blockNameCompany').children('h1').text().trim();
+        const title = $('#productDetailUpdateable > div.container.containerCompany > div.headerCompany.containerWhite > div > div.companyCol1.companyColumn > div.companyRow > div.companyCol1.blockNameCompany').children('h1').text().trim();
   
         const address = $('.spRight').children('span').text().trim() + $('.spRight').text().trim();
         const fax = $('.faxNumber').text().trim();
@@ -70,8 +73,8 @@ function getCompany(searchUrl) {
         const companyEmployees = urInfo[5];
         const kompassID = urInfo[6];
 
-        companies.push(new Company(title,address,fax,status,year,form,activity,officeEmployees,companyEmployees,kompassID).outputInfo());
-        values.push([title,address,fax,status,year,form,activity,officeEmployees,companyEmployees,kompassID]);
+        companies.push(new Company(title,address,fax,status,year,form,activity,officeEmployees,companyEmployees,kompassID,searchUrl).outputInfo());
+        values.push([title,address,fax,status,year,form,activity,officeEmployees,companyEmployees,kompassID,searchUrl]);
       });
   }
 
@@ -80,8 +83,8 @@ function getCompany(searchUrl) {
       .then(response => response.text())
       .then(body => {
         const $ = cheerio.load(body);
-        $('#resultatDivId > div').each(function(i, element) {
-          getCompany(encodeURI($(this).find('a').attr('href')));
+        $('#resultatDivId > div[class="prod_list "] > div').each(function(i, element) {
+          getCompany(encodeURI($(this).children('h2').find('a').attr('href')));
       });
       }); 
   }
@@ -92,7 +95,9 @@ function getCompany(searchUrl) {
       .then(body => {
         const $ = cheerio.load(body);
         $('#regions > div > div > ul > li').each(function(i, element) {
+          console.log('//////////////////////////////' + URL + encodeURI($(this).find('a').attr('href')));
           getCompanies(URL + encodeURI($(this).find('a').attr('href')));
+          
       });
       }); 
   }
