@@ -8,6 +8,13 @@ const companies = []
 var sql = "INSERT INTO companies(title,address,fax,companystatus,companyyear,form,activity,officeEmployees,companyEmployees,kompassID) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
 
+var con = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "kompass"
+});
+
 class Company {
   constructor(title,
     address,
@@ -95,12 +102,6 @@ function getCompany(searchUrl) {
       }); 
   }
 
-  var con = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: "kompass"
-  });
   
 
   function getRegions(){
