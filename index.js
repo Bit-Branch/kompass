@@ -7,6 +7,7 @@ const URL = 'https://by.kompass.com/'
 const companies = []
 var sql = "INSERT INTO companies(title,address,fax,companystatus,companyyear,form,activity,officeEmployees,companyEmployees,kompassID) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
+needle.defaults({ open_timeout: 60000 })
 
 var con = mysql.createPool({
   host: "localhost",
